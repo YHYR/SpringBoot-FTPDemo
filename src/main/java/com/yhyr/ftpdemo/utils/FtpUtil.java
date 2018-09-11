@@ -33,7 +33,7 @@ public class FtpUtil {
         try {
             inputStream = new FileInputStream(new File(uploadFilePath));
             CreateRemoteDirecroty(ftpClient, remoteDirPath);
-            ftpClient.changeWorkingDirectory(remoteDirPath);
+            ftpClient.changeWorkingDirectory(new String(remoteDirPath.getBytes("utf-8"), "iso-8859-1"));
             ftpClient.storeFile(new String(remoteFileName.getBytes("utf-8"), "iso-8859-1"), inputStream);
             inputStream.close();
             logger.info("Upload file: {} Successful", remoteFileName);
@@ -68,7 +68,7 @@ public class FtpUtil {
             File dirFile = new File(uploadDirPath);
             if (dirFile.isDirectory()) {
                 CreateRemoteDirecroty(ftpClient, remoteDirPath);
-                ftpClient.changeWorkingDirectory(remoteDirPath);
+                ftpClient.changeWorkingDirectory(new String(remoteDirPath.getBytes("utf-8"), "iso-8859-1"));
 
                 File[] fileList = dirFile.listFiles();
                 for (File file : fileList) {
@@ -106,7 +106,7 @@ public class FtpUtil {
         boolean flag = false;
         logger.debug("Begin download FTP File: {}/{}", remoteDirPath, remoteFileName);
         try {
-            ftpClient.changeWorkingDirectory(remoteDirPath);
+            ftpClient.changeWorkingDirectory(new String(remoteDirPath.getBytes("utf-8"), "iso-8859-1"));
             FTPFile[] ftpFiles = ftpClient.listFiles();
             for (FTPFile file : ftpFiles) {
                 if (remoteFileName.equals(file.getName())) {
@@ -157,7 +157,7 @@ public class FtpUtil {
                 localDirFile.mkdirs();
             }
             os = new FileOutputStream(new File(localFilePath));
-            ftpClient.changeWorkingDirectory(remoteDirPath);
+            ftpClient.changeWorkingDirectory(new String(remoteDirPath.getBytes("utf-8"), "iso-8859-1"));
             FTPFile[] ftpFiles = ftpClient.listFiles();
             for (FTPFile file : ftpFiles) {
                 if (remoteFileName.equals(file.getName())) {
@@ -199,7 +199,7 @@ public class FtpUtil {
                 logger.info("Target Directory: {} is not exist in ftp", remoteDirPath);
                 return false;
             }
-            FTPFile[] ftpFileArr = ftpClient.listFiles(remoteDirPath);
+            FTPFile[] ftpFileArr = ftpClient.listFiles(new String(remoteDirPath.getBytes("utf-8"), "iso-8859-1"));
             logger.info("RemoteDir's file num is: {}", ftpFileArr.length);
             for (FTPFile ftpFile : ftpFileArr) {
                 String fileName = ftpFile.getName();
@@ -221,6 +221,7 @@ public class FtpUtil {
 
     /**
      * 删除文件
+     * 
      * @param ftpClient
      * @param remoteFilePath
      * @return
@@ -258,7 +259,7 @@ public class FtpUtil {
                 return false;
             }
 
-            FTPFile[] ftpFileArr = ftpClient.listFiles(remoteDirPath);
+            FTPFile[] ftpFileArr = ftpClient.listFiles(new String(remoteDirPath.getBytes("utf-8"), "iso-8859-1"));
             for (FTPFile ftpFile : ftpFileArr) {
                 String fileName = ftpFile.getName();
                 if (ftpFile.isDirectory()) {
@@ -267,8 +268,8 @@ public class FtpUtil {
                     deleteFile(ftpClient, remoteDirPath + '/' + fileName);
                 }
             }
-            if (ftpClient.listFiles(remoteDirPath).length == 0) {
-                if (ftpClient.removeDirectory(remoteDirPath)) {
+            if (ftpClient.listFiles(new String(remoteDirPath.getBytes("utf-8"), "iso-8859-1")).length == 0) {
+                if (ftpClient.removeDirectory(new String(remoteDirPath.getBytes("utf-8"), "iso-8859-1"))) {
                     logger.info("Delete Empty Directory: {} successful", remoteDirPath);
                 } else {
                     logger.info("Delete Empty Directory: {} failed", remoteDirPath);
@@ -322,7 +323,7 @@ public class FtpUtil {
      * @throws IOException
      */
     private boolean existFile(FTPClient ftpClient, String dir, String fileName) throws IOException {
-        FTPFile[] ftpFileArr = ftpClient.listFiles(dir);
+        FTPFile[] ftpFileArr = ftpClient.listFiles(new String(dir.getBytes("utf-8"), "iso-8859-1"));
         if (ftpFileArr.length > 0) {
             for (FTPFile f : ftpFileArr) {
                 if (f.getName().trim().equals(fileName)) {
@@ -347,7 +348,7 @@ public class FtpUtil {
         }
 
         String dirName = path.substring(path.lastIndexOf("/") + 1, path.length());
-        FTPFile[] ftpFiles = ftpClient.listDirectories(dirPath);
+        FTPFile[] ftpFiles = ftpClient.listDirectories(new String(dirPath.getBytes("utf-8"), "iso-8859-1"));
         for (FTPFile ftpFile : ftpFiles) {
             if (ftpFile.getName().trim().equals(dirName)) {
                 logger.info("Target directory: {} is exist in FTP: {}", dirName, dirPath);
@@ -365,7 +366,7 @@ public class FtpUtil {
      */
     private boolean makeDirectory(FTPClient ftpClient, String dir) {
         try {
-            if (ftpClient.makeDirectory(dir)) {
+            if (ftpClient.makeDirectory(new String(dir.getBytes("utf-8"), "iso-8859-1"))) {
                 logger.info("Create directory: {} successful", dir);
                 return true;
             } else {
