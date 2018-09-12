@@ -32,7 +32,7 @@ public class FtpUtil {
         FileInputStream inputStream = null;
         try {
             inputStream = new FileInputStream(new File(uploadFilePath));
-            CreateRemoteDirecroty(ftpClient, remoteDirPath);
+            createRemoteDirecroty(ftpClient, remoteDirPath);
             ftpClient.changeWorkingDirectory(new String(remoteDirPath.getBytes("utf-8"), "iso-8859-1"));
             ftpClient.storeFile(new String(remoteFileName.getBytes("utf-8"), "iso-8859-1"), inputStream);
             inputStream.close();
@@ -67,7 +67,7 @@ public class FtpUtil {
         try {
             File dirFile = new File(uploadDirPath);
             if (dirFile.isDirectory()) {
-                CreateRemoteDirecroty(ftpClient, remoteDirPath);
+                createRemoteDirecroty(ftpClient, remoteDirPath);
                 ftpClient.changeWorkingDirectory(new String(remoteDirPath.getBytes("utf-8"), "iso-8859-1"));
 
                 File[] fileList = dirFile.listFiles();
@@ -292,7 +292,7 @@ public class FtpUtil {
      * @return
      * @throws IOException
      */
-    private void CreateRemoteDirecroty(FTPClient ftpClient, String remotePath) throws IOException {
+    private void createRemoteDirecroty(FTPClient ftpClient, String remotePath) throws IOException {
         StringBuilder path = new StringBuilder("/");
 
         if (!remotePath.startsWith(path.toString())) {
